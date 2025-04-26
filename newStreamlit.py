@@ -59,11 +59,20 @@ def main_page():
         > Developed by **Sami El-Khoury Awaragi**, **Camelia Ladjeroud**, **Azan Niazi**, and **Tristan Thai**.
     """)
 
+# Load S&P 500 symbols
+@st.cache_data
+def load_symbols():
+    url = "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/master/data/constituents.csv"
+    df = pd.read_csv(url)
+    return df["Symbol"].tolist()
+
+stock_list = load_symbols()
+
 # belfort page
 def trading_tool():
     st.title("📈 Belfort AI")
 
-    symbol = st.text_input("Enter Stock Symbol (e.g., SPX, GOOGL, DJI):", "AAPL").upper()
+    symbol = st.selectbox("Pick a stock (or type your own below):", [""] + stock_list)
     start_date = st.date_input("Start Date", pd.to_datetime("2022-01-01"))
     end_date = st.date_input("End Date", pd.to_datetime("today"))
 
